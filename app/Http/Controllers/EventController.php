@@ -25,6 +25,7 @@ class EventController extends Controller
     public function store(Request $request) {
         $this->validate($request, [
             'name' => 'required',
+            'parent' => 'exists:events,id',
             'date' => 'date',
         ]);
 
@@ -52,6 +53,7 @@ class EventController extends Controller
     public function update(Request $request, Event $event) {
         $this->validate($request, [
             'date' => 'date',
+            'parent' => 'exists:events,id',
         ]);
 
         $event->update($request->all());
