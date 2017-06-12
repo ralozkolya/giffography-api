@@ -15,10 +15,14 @@ class CreateVideosTable extends Migration
     {
         Schema::create('videos', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('event')->nullable()->references('id')->on('events');
-            $table->integer('file')->nullable()->references('id')->on('files');
-            $table->integer('thumb')->nullable()->references('id')->on('files');
+            $table->integer('event', 0, 1)->nullable();
+            $table->integer('file', 0, 1)->nullable();
+            $table->integer('thumb', 0, 1)->nullable();
             $table->timestamps();
+
+            $table->foreign('event')->references('id')->on('events');
+            $table->foreign('file')->references('id')->on('files');
+            $table->foreign('thumb')->references('id')->on('files');
         });
     }
 
