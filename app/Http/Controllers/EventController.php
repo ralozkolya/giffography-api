@@ -14,17 +14,7 @@ class EventController extends Controller
      */
     public function index()
     {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+        return Event::paginate(10);
     }
 
     /**
@@ -35,7 +25,7 @@ class EventController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        //return 'wat';
     }
 
     /**
