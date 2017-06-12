@@ -13,7 +13,7 @@ class EventController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index() {
-        return Event::paginate(10);
+        return response(Event::paginate(10));
     }
 
     /**

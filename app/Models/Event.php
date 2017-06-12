@@ -22,11 +22,21 @@ class Event extends Model
         });
 
         Event::deleting(function ($event) {
-            Video::where('event', $event->id)->delete();
+
+            $events = Event::where('parent', $event->id)->get();
+            foreach($events as $e) {
+                $e->delete();
+            }
+
+            $videos = Video::where('event', $event->id)->get();
+            foreach($videos as $v) {
+                $v->delete();
+            }
         });
 
         Event::deleted(function ($event) {
-            File::where('id', $event->thumb)->delete();
+            $thumb = File::where('id', $event->thumb)->first();
+            $thumb && $thumb->delete();
         });
     }
 }
