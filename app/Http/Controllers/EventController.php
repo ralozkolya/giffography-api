@@ -12,8 +12,7 @@ class EventController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
-    {
+    public function index() {
         return Event::paginate(10);
     }
 
@@ -23,9 +22,14 @@ class EventController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
-    {
-        //return 'wat';
+    public function store(Request $request) {
+        $this->validate($request, [
+            'name' => 'required',
+            'date' => 'date',
+        ]);
+
+        $event = Event::create($request->all());
+        return response($event, 201);
     }
 
     /**
@@ -34,20 +38,8 @@ class EventController extends Controller
      * @param  \App\Models\Event  $event
      * @return \Illuminate\Http\Response
      */
-    public function show(Event $event)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Event  $event
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Event $event)
-    {
-        //
+    public function show(Event $event) {
+        return response($event);
     }
 
     /**
@@ -57,9 +49,13 @@ class EventController extends Controller
      * @param  \App\Models\Event  $event
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Event $event)
-    {
-        //
+    public function update(Request $request, Event $event) {
+        $this->validate($request, [
+            'date' => 'date',
+        ]);
+
+        $event->update($request->all());
+        return response($event);
     }
 
     /**
@@ -70,6 +66,7 @@ class EventController extends Controller
      */
     public function destroy(Event $event)
     {
-        //
+        $event->delete();
+        return response(null, 204);
     }
 }
