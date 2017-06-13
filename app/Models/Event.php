@@ -39,4 +39,9 @@ class Event extends Model
             $thumb && $thumb->delete();
         });
     }
+
+    public function getFolder() {
+        $path = str_replace('-', '/', $this->date);
+        return $path . '/' . $this->id;
+    }
 }

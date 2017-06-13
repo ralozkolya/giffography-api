@@ -6,6 +6,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class Video extends Model
 {
+    protected $fillable = [
+        'event', 'file', 'thumb'
+    ];
+
     protected static function boot()
     {
         parent::boot();

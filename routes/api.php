@@ -14,3 +14,5 @@ use Illuminate\Http\Request;
 */
 
 Route::resource('events', 'EventController');
+Route::resource('videos', 'VideoController');
+Route::resource('files', 'FileController');

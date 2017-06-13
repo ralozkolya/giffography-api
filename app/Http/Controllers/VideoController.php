@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\ConvertVideo;
+use App\Models\Event;
+use App\Models\File;
 use App\Models\Video;
 use Illuminate\Http\Request;
 
@@ -14,17 +17,7 @@ class VideoController extends Controller
      */
     public function index()
     {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+        return response(Video::paginate(20));
     }
 
     /**
@@ -33,9 +26,29 @@ class VideoController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
-    {
-        //
+    public function store(Request $request) {
+        $this->validate($request, [
+            'event' => 'required|exists:events,id',
+            'file' => 'required|file|mimetypes:video/mp4|mimes:mp4'
+        ]);
+
+        $event = Event::where('id', $request->input('event'))->first();
+
+        $path = $request->file('file')->store('raw/'.$event->getFolder());
+        $name = $request->file('file')->hashName();
+
+        $file = new File;
+        $file->name = $name;
+        $file->path = $path;
+        $file->save();
+
+        dispatch(new ConvertVideo($file, $event));
+
+        $video = Video::create([
+            'event' => $event->id,
+            'file' => $file->id,
+        ]);
+        return response($video, 201);
     }
 
     /**
