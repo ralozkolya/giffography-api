@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use FFMpeg\FFMpeg;
+use FFMpeg\FFProbe;
 use Illuminate\Support\ServiceProvider;
 
 class FFMpegServiceProvider extends ServiceProvider
@@ -28,9 +29,16 @@ class FFMpegServiceProvider extends ServiceProvider
         $this->app->singleton(FFMpeg::class, function ($app) use ($params) {
             return FFMpeg::create($params);
         });
+
+        $this->app->singleton(FFProbe::class, function ($app) use ($ffprobe_path) {
+            return FFProbe::create(['ffprobe.binaries' => $ffprobe_path]);
+        });
     }
 
     public function provides() {
-        return [FFMpeg::class];
+        return [
+            FFMpeg::class,
+            FFProbe::class
+        ];
     }
 }
