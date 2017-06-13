@@ -56,7 +56,10 @@ class VideoController extends Controller
         $file->resolution = $dimensions;
         $file->save();
 
-        dispatch(new ConvertVideo($file, $event));
+        dispatch(new ConvertVideo($file, $event, [
+            'boomerang' => $request->query('boomerang', false),
+            'framerate' => $request->query('framerate', 5),
+        ]));
 
         $video = Video::create([
             'event' => $event->id,

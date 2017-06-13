@@ -20,19 +20,22 @@ class ConvertVideo implements ShouldQueue
 
     private $file;
     private $event;
+    private $params;
 
     /**
      * Create a new job instance.
      *
      * @param \App\Models\File $file    File to convert
      * @param \App\Models\Event $event  Event file belongs to
+     * @param {Array} $params
      *
      * @return void
      */
-    public function __construct(File $file, Event $event)
+    public function __construct(File $file, Event $event, $params = null)
     {
         $this->file = $file;
         $this->event = $event;
+        $this->params = $params;
     }
 
     /**
@@ -45,10 +48,12 @@ class ConvertVideo implements ShouldQueue
         $path = storage_path('app/'.$this->file->path);
         Storage::makeDirectory("public/video/{$this->event->getFolder()}");
 
+        $framerate = $this->params && $this->params->framerate ? $this->params->framerate : 5;
+
         $video = $ffmpeg->open($path);
         $video
             ->filters()
-            ->framerate(new FrameRate(3), 250)
+            ->framerate(new FrameRate($framerate), 250)
             ->synchronize();
 
         $format = new X264();
