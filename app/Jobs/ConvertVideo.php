@@ -38,15 +38,10 @@ class ConvertVideo implements ShouldQueue
     /**
      * Execute the job.
      *
+     * @param FFMpeg $ffmpeg    Inject FFMpeg instance
      * @return void
      */
-    public function handle()
-    {
-        $ffmpeg = FFMpeg::create([
-            'ffmpeg.binaries' => base_path('../ffmpeg/bin/ffmpeg.exe'),
-            'ffprobe.binaries' => base_path('../ffmpeg/bin/ffprobe.exe'),
-            'ffmpeg.threads' => 2
-        ]);
+    public function handle(FFMpeg $ffmpeg) {
         $path = storage_path('app/'.$this->file->path);
         Storage::makeDirectory("public/video/{$this->event->getFolder()}");
 
