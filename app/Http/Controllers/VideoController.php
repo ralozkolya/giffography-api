@@ -6,6 +6,8 @@ use App\Jobs\ConvertVideo;
 use App\Models\Event;
 use App\Models\File;
 use App\Models\Video;
+use FFMpeg\Exception\RuntimeException;
+use FFMpeg\FFProbe;
 use Illuminate\Http\Request;
 
 class VideoController extends Controller
@@ -24,9 +26,11 @@ class VideoController extends Controller
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
+     * @param  \FFMpeg\FFProbe  $ffprobe  Inject FFProbe instance
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request) {
+    public function store(Request $request, FFProbe $ffprobe) {
+
         $this->validate($request, [
             'event' => 'required|exists:events,id',
             'file' => 'required|file|mimetypes:video/mp4|mimes:mp4'
@@ -37,9 +41,19 @@ class VideoController extends Controller
         $path = $request->file('file')->store('raw/'.$event->getFolder());
         $name = $request->file('file')->hashName();
 
+        try {
+            $dimensions = $ffprobe->streams(storage_path('app/' . $path))->first()->getDimensions();
+            $dimensions = "{$dimensions->getWidth()}x{$dimensions->getHeight()}";
+        } catch (RuntimeException $e) {
+            $dimensions = null;
+        }
+
         $file = new File;
         $file->name = $name;
         $file->path = $path;
+        $file->size = $request->file('file')->getSize();
+        $file->mimetype = $request->file('file')->getMimeType();
+        $file->resolution = $dimensions;
         $file->save();
 
         dispatch(new ConvertVideo($file, $event));

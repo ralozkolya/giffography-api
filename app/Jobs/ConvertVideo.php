@@ -38,7 +38,7 @@ class ConvertVideo implements ShouldQueue
     /**
      * Execute the job.
      *
-     * @param FFMpeg $ffmpeg    Inject FFMpeg instance
+     * @param \FFMPeg\FFMpeg $ffmpeg    Inject FFMpeg instance
      * @return void
      */
     public function handle(FFMpeg $ffmpeg) {
