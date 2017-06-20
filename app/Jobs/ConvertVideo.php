@@ -64,7 +64,7 @@ class ConvertVideo implements ShouldQueue
         $frame->save(storage_path("app/{$folder}/$thumbName"));
 
         DB::transaction(function () use ($folder, $thumbName, &$video){
-            $thumb = new File;
+            $thumb = new File();
             $thumb->path = "{$folder}/$thumbName";
             $thumb->save();
 

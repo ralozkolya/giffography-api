@@ -43,7 +43,7 @@ class VideoController extends Controller
         $video = null;
 
         DB::transaction(function () use ($path, &$event, &$request, &$video) {
-            $file = new File;
+            $file = new File();
             $file->path = $path;
             $file->save();
 
