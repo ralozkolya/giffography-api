@@ -38,22 +38,12 @@ class VideoController extends Controller
 
         $event = Event::where('id', $request->input('event'))->first();
 
-        $path = $request->file('file')->store('raw/'.$event->getFolder());
+        $path = $request->file('file')->store("public/video/{$event->getFolder()}");
         $name = $request->file('file')->hashName();
-
-        try {
-            $dimensions = $ffprobe->streams(storage_path('app/' . $path))->first()->getDimensions();
-            $dimensions = "{$dimensions->getWidth()}x{$dimensions->getHeight()}";
-        } catch (RuntimeException $e) {
-            $dimensions = null;
-        }
 
         $file = new File;
         $file->name = $name;
         $file->path = $path;
-        $file->size = $request->file('file')->getSize();
-        $file->mimetype = $request->file('file')->getMimeType();
-        $file->resolution = $dimensions;
         $file->save();
 
         dispatch(new ConvertVideo($file, $event, [
