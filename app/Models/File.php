@@ -9,23 +9,25 @@ use Illuminate\Support\Facades\Storage;
 
 /**
  * @property string name
- * @property false|string path
+ * @property string path
+ * @property string extension
  * @property int size
  * @property null|string mimetype
  * @property null|string resolution
+ * @property number id
  */
 class File extends Model
 {
 
-    protected static function boot()
-    {
+    protected static function boot() {
         parent::boot();
 
         File::created(function ($file) {
             $ffprobe = App::make(FFProbe::class);
 
             try {
-                $dimensions = $ffprobe->streams(storage_path('app/' . $file->path))->first()->getDimensions();
+                $path = storage_path('app/'.$file->path);
+                $dimensions = $ffprobe->streams($path)->first()->getDimensions();
                 $dimensions = "{$dimensions->getWidth()}x{$dimensions->getHeight()}";
             } catch (RuntimeException $e) {
                 $dimensions = null;
@@ -34,6 +36,11 @@ class File extends Model
             $file->size = Storage::size($file->path);
             $file->mimetype = Storage::mimetype($file->path);
             $file->resolution = $dimensions;
+
+            $file->extension = \Illuminate\Support\Facades\File::extension($file->path);
+            $file->name = \Illuminate\Support\Facades\File::name($file->path);
+            $file->path = \Illuminate\Support\Facades\File::dirname($file->path);
+
             $file->save();
         });
 
@@ -41,5 +48,13 @@ class File extends Model
             // TODO: delete file
             // Storage::delete($file->name);
         });
+    }
+
+    public function getFullPath() {
+        return $this->path.'/'.$this->getFullName();
+    }
+
+    public function getFullName() {
+        return $this->name.'.'.$this->extension;
     }
 }

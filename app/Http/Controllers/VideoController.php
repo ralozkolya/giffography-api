@@ -39,10 +39,8 @@ class VideoController extends Controller
         $event = Event::where('id', $request->input('event'))->first();
 
         $path = $request->file('file')->store("public/video/{$event->getFolder()}");
-        $name = $request->file('file')->hashName();
 
         $file = new File;
-        $file->name = $name;
         $file->path = $path;
         $file->save();
 
