@@ -11,8 +11,7 @@ class Event extends Model
         'name', 'folder', 'date', 'parent', 'thumb'
     ];
 
-    protected static function boot()
-    {
+    protected static function boot() {
         parent::boot();
 
         Event::creating(function ($event) {

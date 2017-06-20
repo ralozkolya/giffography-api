@@ -5,6 +5,7 @@ namespace App\Jobs;
 use App\Models\Event;
 use App\Models\File;
 use FFMpeg\Coordinate\FrameRate;
+use FFMpeg\Coordinate\TimeCode;
 use FFMpeg\FFMpeg;
 use FFMpeg\Format\Video\X264;
 use Illuminate\Bus\Queueable;
@@ -48,11 +49,20 @@ class ConvertVideo implements ShouldQueue
      * @return void
      */
     public function handle(FFMpeg $ffmpeg) {
-        $path = storage_path('app/'.$this->file->path);
+        $path = storage_path('app/'.$this->file->getFullPath());
+        $folder = "public/video/{$this->event->getFolder()}";
 
-        Storage::makeDirectory("public/video/{$this->event->getFolder()}");
+        Storage::makeDirectory($folder);
 
         $video = $ffmpeg->open($path);
+
+        $frame = $video->frame(TimeCode::fromSeconds(0));
+        $thumbName = "thumb_{$this->file->name}.jpg";
+        $frame->save(storage_path("app/{$folder}/$thumbName"));
+        $thumb = new File;
+        $thumb->path = "{$folder}/$thumbName";
+        $thumb->save();
+
         $video
             ->filters()
             ->framerate(new FrameRate($this->framerate), 250)
@@ -65,7 +75,7 @@ class ConvertVideo implements ShouldQueue
             $this->file->save();
         });
 
-        $video->save($format, storage_path("app/public/video/{$this->event->getFolder()}/conv_{$this->file->name}"));
+        $video->save($format, storage_path("app/{$folder}/conv_{$this->file->getFullName()}"));
 
         $this->file->progress = 100;
         $this->file->save();
