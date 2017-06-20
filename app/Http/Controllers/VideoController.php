@@ -9,6 +9,7 @@ use App\Models\Video;
 use FFMpeg\Exception\RuntimeException;
 use FFMpeg\FFProbe;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class VideoController extends Controller
 {
@@ -39,20 +40,24 @@ class VideoController extends Controller
         $event = Event::where('id', $request->input('event'))->first();
 
         $path = $request->file('file')->store("public/video/{$event->getFolder()}");
+        $video = null;
 
-        $file = new File;
-        $file->path = $path;
-        $file->save();
+        DB::transaction(function () use ($path, &$event, &$request, &$video) {
+            $file = new File;
+            $file->path = $path;
+            $file->save();
 
-        dispatch(new ConvertVideo($file, $event, [
-            'boomerang' => $request->query('boomerang', false),
-            'framerate' => $request->query('framerate', 5),
-        ]));
+            dispatch(new ConvertVideo($file, $event, [
+                'boomerang' => $request->query('boomerang', false),
+                'framerate' => $request->query('framerate', 5),
+            ]));
 
-        $video = Video::create([
-            'event' => $event->id,
-            'file' => $file->id,
-        ]);
+            $video = Video::create([
+                'event' => $event->id,
+                'file' => $file->id,
+            ]);
+        });
+
         return response($video, 201);
     }
 

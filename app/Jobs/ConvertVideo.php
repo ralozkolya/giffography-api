@@ -14,7 +14,9 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Mockery\Exception;
 
 class ConvertVideo implements ShouldQueue
 {
@@ -60,27 +62,30 @@ class ConvertVideo implements ShouldQueue
         $frame = $video->frame(TimeCode::fromSeconds(0));
         $thumbName = "thumb_{$this->file->name}.jpg";
         $frame->save(storage_path("app/{$folder}/$thumbName"));
-        $thumb = new File;
-        $thumb->path = "{$folder}/$thumbName";
-        $thumb->save();
 
-        Video::where('file', $this->file->id)->update(['thumb' => $thumb->id]);
+        DB::transaction(function () use ($folder, $thumbName, &$video){
+            $thumb = new File;
+            $thumb->path = "{$folder}/$thumbName";
+            $thumb->save();
 
-        $video
-            ->filters()
-            ->framerate(new FrameRate($this->framerate), 250)
-            ->synchronize();
+            Video::where('file', $this->file->id)->update(['thumb' => $thumb->id]);
 
-        $format = new X264();
-        $format->setAdditionalParameters(['-filter_complex', '[0]reverse[r];[0][r] concat', '-an']);
-        $format->on('progress', function ($video, $format, $percentage) {
-            $this->file->progress = $percentage;
+            $video
+                ->filters()
+                ->framerate(new FrameRate($this->framerate), 250)
+                ->synchronize();
+
+            $format = new X264();
+            $format->setAdditionalParameters(['-filter_complex', '[0]reverse[r];[0][r] concat', '-an']);
+            $format->on('progress', function ($video, $format, $percentage) {
+                $this->file->progress = $percentage;
+                $this->file->save();
+            });
+
+            $video->save($format, storage_path("app/{$folder}/conv_{$this->file->getFullName()}"));
+
+            $this->file->progress = 100;
             $this->file->save();
         });
-
-        $video->save($format, storage_path("app/{$folder}/conv_{$this->file->getFullName()}"));
-
-        $this->file->progress = 100;
-        $this->file->save();
     }
 }
