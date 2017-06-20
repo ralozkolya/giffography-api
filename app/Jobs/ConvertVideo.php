@@ -20,7 +20,8 @@ class ConvertVideo implements ShouldQueue
 
     private $file;
     private $event;
-    private $params;
+    private $framerate = 5;
+    private $boomerang = false;
 
     /**
      * Create a new job instance.
@@ -28,14 +29,16 @@ class ConvertVideo implements ShouldQueue
      * @param \App\Models\File $file    File to convert
      * @param \App\Models\Event $event  Event file belongs to
      * @param {Array} $params
-     *
-     * @return void
      */
     public function __construct(File $file, Event $event, $params = null)
     {
         $this->file = $file;
         $this->event = $event;
-        $this->params = $params;
+
+        if($params) {
+            $this->framerate = $params['framerate'] || $this->framerate;
+            $this->boomerang = $params['boomerang'] || $this->boomerang;
+        }
     }
 
     /**
@@ -46,14 +49,13 @@ class ConvertVideo implements ShouldQueue
      */
     public function handle(FFMpeg $ffmpeg) {
         $path = storage_path('app/'.$this->file->path);
-        Storage::makeDirectory("public/video/{$this->event->getFolder()}");
 
-        $framerate = $this->params && $this->params->framerate ? $this->params->framerate : 5;
+        Storage::makeDirectory("public/video/{$this->event->getFolder()}");
 
         $video = $ffmpeg->open($path);
         $video
             ->filters()
-            ->framerate(new FrameRate($framerate), 250)
+            ->framerate(new FrameRate($this->framerate), 250)
             ->synchronize();
 
         $format = new X264();
@@ -63,7 +65,7 @@ class ConvertVideo implements ShouldQueue
             $this->file->save();
         });
 
-        $video->save($format, storage_path("app/public/video/{$this->event->getFolder()}/{$this->file->name}"));
+        $video->save($format, storage_path("app/public/video/{$this->event->getFolder()}/conv_{$this->file->name}"));
 
         $this->file->progress = 100;
         $this->file->save();
