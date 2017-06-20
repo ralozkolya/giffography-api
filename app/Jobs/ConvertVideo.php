@@ -4,6 +4,7 @@ namespace App\Jobs;
 
 use App\Models\Event;
 use App\Models\File;
+use App\Models\Video;
 use FFMpeg\Coordinate\FrameRate;
 use FFMpeg\Coordinate\TimeCode;
 use FFMpeg\FFMpeg;
@@ -62,6 +63,8 @@ class ConvertVideo implements ShouldQueue
         $thumb = new File;
         $thumb->path = "{$folder}/$thumbName";
         $thumb->save();
+
+        Video::where('file', $this->file->id)->update(['thumb' => $thumb->id]);
 
         $video
             ->filters()
