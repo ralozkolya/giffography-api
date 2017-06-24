@@ -18,8 +18,7 @@ class VideoController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
-    {
+    public function index() {
         return response(Video::paginate(20));
     }
 
@@ -67,8 +66,7 @@ class VideoController extends Controller
      * @param  \App\Models\Video  $video
      * @return \Illuminate\Http\Response
      */
-    public function show(Video $video)
-    {
+    public function show(Video $video) {
         return response($video);
     }
 
