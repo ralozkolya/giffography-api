@@ -55,7 +55,7 @@ class ConvertVideo implements ShouldQueue
         $path = storage_path('app/'.$this->file->getFullPath());
         $folder = "public/video/{$this->event->getFolder()}";
 
-        Storage::makeDirectory($folder);
+        Storage::makeDirectory($folder, 0775);
 
         $video = $ffmpeg->open($path);
 
