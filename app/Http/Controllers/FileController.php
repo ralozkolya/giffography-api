@@ -43,8 +43,7 @@ class FileController extends Controller
      * @param  \App\Models\File  $file
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, File $file)
-    {
+    public function update(Request $request, File $file) {
         //
     }
 
@@ -54,8 +53,7 @@ class FileController extends Controller
      * @param  \App\Models\File  $file
      * @return \Illuminate\Http\Response
      */
-    public function destroy(File $file)
-    {
+    public function destroy(File $file) {
         //
     }
 }
