@@ -18,8 +18,12 @@ class VideoController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index() {
-        return response(Video::paginate(20));
+    public function index(Request $request) {
+        if($request->has('event')) {
+            return response(Video::where('event', $request->event)->paginate(20));
+        } else {
+            return response(Video::paginate(20));
+        }
     }
 
     /**
@@ -71,25 +75,13 @@ class VideoController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Video  $video
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Video $video)
-    {
-        //
-    }
-
-    /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  \App\Models\Video  $video
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Video $video)
-    {
+    public function update(Request $request, Video $video) {
         //
     }
 
@@ -99,8 +91,7 @@ class VideoController extends Controller
      * @param  \App\Models\Video  $video
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Video $video)
-    {
+    public function destroy(Video $video) {
         //
     }
 }
