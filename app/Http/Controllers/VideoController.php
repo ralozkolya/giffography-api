@@ -92,6 +92,7 @@ class VideoController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function destroy(Video $video) {
-        //
+        $video->delete();
+        return response(null, 204);
     }
 }
