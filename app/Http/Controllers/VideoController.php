@@ -57,7 +57,7 @@ class VideoController extends Controller
 
             $video = Video::create([
                 'event' => $event->id,
-                'file' => $file->id,
+                'original' => $file->id,
             ]);
         });
 
