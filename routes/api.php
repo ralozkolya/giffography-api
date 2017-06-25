@@ -13,6 +13,7 @@ use Illuminate\Http\Request;
 |
 */
 
+Route::get('events/{id}/videos', 'EventController@videos');
 Route::resource('events', 'EventController');
 Route::resource('videos', 'VideoController');
 Route::resource('files', 'FileController');

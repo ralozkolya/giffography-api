@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Event;
+use App\Models\Video;
 use Illuminate\Http\Request;
 
 class EventController extends Controller
@@ -70,5 +71,9 @@ class EventController extends Controller
     {
         $event->delete();
         return response(null, 204);
+    }
+
+    public function videos($id) {
+        return response(Video::where('event', $id)->paginate(20));
     }
 }
