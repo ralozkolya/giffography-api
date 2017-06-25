@@ -54,6 +54,7 @@ class FileController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function destroy(File $file) {
-        //
+        $file->delete();
+        return response(null, 204);
     }
 }
