@@ -11,8 +11,12 @@ use FFMpeg\FFProbe;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
-class VideoController extends Controller
-{
+class VideoController extends Controller {
+
+    public function __construct() {
+        $this->middleware('auth:api')->except(['index', 'show']);
+    }
+
     /**
      * Display a listing of the resource.
      *
