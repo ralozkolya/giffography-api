@@ -1,0 +1,15 @@
+before_script:
+  - bash .gitlab-ci.sh
+
+variables:
+  MYSQL_DATABASE: $MYSQL_DATABASE
+  MYSQL_ROOT_PASSWORD: $MYSQL_ROOT_PASSWORD
+
+REST:
+  image: php:7.0
+  services:
+    - mysql:5.6
+  script:
+    - php artisan migrate
+    - php artisan db:seed
+    - php ./vendor/bin/phpunit --colors

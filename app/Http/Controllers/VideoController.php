@@ -11,16 +11,23 @@ use FFMpeg\FFProbe;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
-class VideoController extends Controller
-{
+class VideoController extends Controller {
+
+    public function __construct() {
+        $this->middleware('auth:api')->except(['index', 'show']);
+    }
+
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
-    {
-        return response(Video::paginate(20));
+    public function index(Request $request) {
+        if($request->has('event')) {
+            return response(Video::where('event', $request->event)->paginate(20));
+        } else {
+            return response(Video::paginate(20));
+        }
     }
 
     /**
@@ -54,7 +61,7 @@ class VideoController extends Controller
 
             $video = Video::create([
                 'event' => $event->id,
-                'file' => $file->id,
+                'original' => $file->id,
             ]);
         });
 
@@ -67,20 +74,8 @@ class VideoController extends Controller
      * @param  \App\Models\Video  $video
      * @return \Illuminate\Http\Response
      */
-    public function show(Video $video)
-    {
+    public function show(Video $video) {
         return response($video);
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Video  $video
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Video $video)
-    {
-        //
     }
 
     /**
@@ -90,8 +85,7 @@ class VideoController extends Controller
      * @param  \App\Models\Video  $video
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Video $video)
-    {
+    public function update(Request $request, Video $video) {
         //
     }
 
@@ -101,8 +95,8 @@ class VideoController extends Controller
      * @param  \App\Models\Video  $video
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Video $video)
-    {
-        //
+    public function destroy(Video $video) {
+        $video->delete();
+        return response(null, 204);
     }
 }

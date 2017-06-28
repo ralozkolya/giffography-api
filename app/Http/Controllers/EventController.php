@@ -3,10 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Models\Event;
+use App\Models\Video;
 use Illuminate\Http\Request;
 
-class EventController extends Controller
-{
+class EventController extends Controller {
+
+    public function __construct() {
+        $this->middleware('auth:api')->except(['index', 'show']);
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -66,9 +71,12 @@ class EventController extends Controller
      * @param  \App\Models\Event  $event
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Event $event)
-    {
+    public function destroy(Event $event) {
         $event->delete();
         return response(null, 204);
+    }
+
+    public function videos($id) {
+        return response(Video::where('event', $id)->paginate(20));
     }
 }

@@ -55,7 +55,7 @@ class ConvertVideo implements ShouldQueue
         $path = storage_path('app/'.$this->file->getFullPath());
         $folder = "public/video/{$this->event->getFolder()}";
 
-        Storage::makeDirectory($folder);
+        Storage::makeDirectory($folder, 0775);
 
         $video = $ffmpeg->open($path);
 
@@ -68,7 +68,7 @@ class ConvertVideo implements ShouldQueue
             $thumb->path = "{$folder}/$thumbName";
             $thumb->save();
 
-            Video::where('file', $this->file->id)->update(['thumb' => $thumb->id]);
+            Video::where('original', $this->file->id)->update(['thumb' => $thumb->id]);
 
             $video
                 ->filters()
@@ -83,6 +83,12 @@ class ConvertVideo implements ShouldQueue
             });
 
             $video->save($format, storage_path("app/{$folder}/conv_{$this->file->getFullName()}"));
+
+            $converted = new File();
+            $converted->path = "{$folder}/conv_{$this->file->getFullName()}";
+            $converted->save();
+
+            Video::where('original', $this->file->id)->update(['converted' => $converted->id]);
 
             $this->file->progress = 100;
             $this->file->save();

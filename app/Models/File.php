@@ -45,7 +45,6 @@ class File extends Model
         });
 
         File::deleted(function ($file) {
-            // TODO: delete file
             Storage::delete($file->getFullPath());
         });
     }
