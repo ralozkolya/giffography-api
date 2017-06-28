@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Video extends Model
 {
     protected $fillable = [
-        'event', 'original', 'conveted', 'thumb'
+        'event', 'original', 'converted', 'thumb'
     ];
 
     protected static function boot()
@@ -15,11 +15,12 @@ class Video extends Model
         parent::boot();
 
         Video::deleted(function ($video) {
-            $original = File::where('id', $video->original)->first();
+            $columns = $video->getOriginal();
+            $original = File::where('id', $columns['original'])->first();
             $original && $original->delete();
-            $converted = File::where('id', $video->converted)->first();
+            $converted = File::where('id', $columns['converted'])->first();
             $converted && $converted->delete();
-            $thumb = File::where('id', $video->thumb)->first();
+            $thumb = File::where('id', $columns['thumb'])->first();
             $thumb && $thumb->delete();
         });
     }
