@@ -40,8 +40,8 @@ class ConvertVideo implements ShouldQueue
         $this->event = $event;
 
         if($params) {
-            $this->framerate = $params['framerate'] || $this->framerate;
-            $this->boomerang = $params['boomerang'] || $this->boomerang;
+            $this->framerate = $params['framerate'] ? $params['framerate'] : $this->framerate;
+            $this->boomerang = $params['boomerang'] ? $params['boomerang'] : $this->boomerang;
         }
     }
 
