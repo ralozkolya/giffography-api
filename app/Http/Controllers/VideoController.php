@@ -8,6 +8,7 @@ use App\Models\File;
 use App\Models\Video;
 use FFMpeg\Exception\RuntimeException;
 use FFMpeg\FFProbe;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -40,11 +41,15 @@ class VideoController extends Controller {
     public function store(Request $request, FFProbe $ffprobe) {
 
         $this->validate($request, [
-            'event' => 'required|exists:events,id',
+            //'event' => 'required|exists:events,id',
             'file' => 'required|file|mimetypes:video/mp4|mimes:mp4'
         ]);
 
-        $event = Event::where('id', $request->input('event'))->first();
+        try {
+            $event = Event::where('id', $request->input('event'))->firstOrFail();
+        } catch (ModelNotFoundException $e) {
+            $event = Event::first();
+        }
 
         $path = $request->file('file')->store("public/video/{$event->getFolder()}");
         $video = null;
