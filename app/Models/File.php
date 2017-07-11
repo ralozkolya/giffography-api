@@ -51,7 +51,11 @@ class File extends Model {
     }
 
     public function getFullPathAttribute() {
-        return asset($this->path.'/'.$this->getFullNameAttribute());
+        return asset($this->local_path);
+    }
+
+    public function getLocalPathAttribute() {
+        return $this->path.'/'.$this->full_name;
     }
 
     public function getFullNameAttribute() {
