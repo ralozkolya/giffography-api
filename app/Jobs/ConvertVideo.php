@@ -52,7 +52,7 @@ class ConvertVideo implements ShouldQueue
      * @return void
      */
     public function handle(FFMpeg $ffmpeg) {
-        $path = storage_path('app/'.$this->file->getFullPath());
+        $path = storage_path('app/'.$this->file->local_path);
         $folder = "public/video/{$this->event->getFolder()}";
 
         Storage::makeDirectory($folder, 0775);
@@ -75,17 +75,25 @@ class ConvertVideo implements ShouldQueue
                 ->framerate(new FrameRate($this->framerate), 250)
                 ->synchronize();
 
+            $formatParams = [];
+
+            if($this->boomerang) {
+                $formatParams = ['-filter_complex', '[0]reverse[r];[0][r] concat'];
+            }
+
+            $formatParams[] = '-an';
+
             $format = new X264();
-            $format->setAdditionalParameters(['-filter_complex', '[0]reverse[r];[0][r] concat', '-an']);
+            $format->setAdditionalParameters($formatParams);
             $format->on('progress', function ($video, $format, $percentage) {
                 $this->file->progress = $percentage;
                 $this->file->save();
             });
 
-            $video->save($format, storage_path("app/{$folder}/conv_{$this->file->getFullName()}"));
+            $video->save($format, storage_path("app/{$folder}/conv_{$this->file->full_name}"));
 
             $converted = new File();
-            $converted->path = "{$folder}/conv_{$this->file->getFullName()}";
+            $converted->path = "{$folder}/conv_{$this->file->full_name}";
             $converted->save();
 
             Video::where('original', $this->file->id)->update(['converted' => $converted->id]);
@@ -93,5 +101,9 @@ class ConvertVideo implements ShouldQueue
             $this->file->progress = 100;
             $this->file->save();
         });
+    }
+
+    public function fail($exception = null) {
+        echo $exception->getMessage();
     }
 }
