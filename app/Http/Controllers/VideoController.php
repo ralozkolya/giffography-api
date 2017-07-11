@@ -6,15 +6,15 @@ use App\Jobs\ConvertVideo;
 use App\Models\Event;
 use App\Models\File;
 use App\Models\Video;
-use FFMpeg\Exception\RuntimeException;
 use FFMpeg\FFProbe;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class VideoController extends Controller {
 
     public function __construct() {
-        $this->middleware('auth:api')->except(['index', 'show']);
+        $this->middleware('auth:api')->except(['index', 'show', 'last']);
     }
 
     /**
@@ -23,11 +23,8 @@ class VideoController extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function index(Request $request) {
-        if($request->has('event')) {
-            return response(Video::where('event', $request->event)->paginate(20));
-        } else {
-            return response(Video::paginate(20));
-        }
+
+        return response(Video::list($request->event));
     }
 
     /**
@@ -40,11 +37,15 @@ class VideoController extends Controller {
     public function store(Request $request, FFProbe $ffprobe) {
 
         $this->validate($request, [
-            'event' => 'required|exists:events,id',
+            //'event' => 'required|exists:events,id',
             'file' => 'required|file|mimetypes:video/mp4|mimes:mp4'
         ]);
 
-        $event = Event::where('id', $request->input('event'))->first();
+        try {
+            $event = Event::where('id', $request->input('event'))->firstOrFail();
+        } catch (ModelNotFoundException $e) {
+            $event = Event::first();
+        }
 
         $path = $request->file('file')->store("public/video/{$event->getFolder()}");
         $video = null;
@@ -98,5 +99,10 @@ class VideoController extends Controller {
     public function destroy(Video $video) {
         $video->delete();
         return response(null, 204);
+    }
+
+    public function last() {
+        $videos = Video::orderBy('id', 'desc')->limit(5)->get();
+        return response($videos);
     }
 }
