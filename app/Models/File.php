@@ -16,8 +16,9 @@ use Illuminate\Support\Facades\Storage;
  * @property null|string resolution
  * @property number id
  */
-class File extends Model
-{
+class File extends Model {
+
+    protected $appends = ['full_path'];
 
     protected static function boot() {
         parent::boot();
@@ -49,11 +50,11 @@ class File extends Model
         });
     }
 
-    public function getFullPath() {
-        return $this->path.'/'.$this->getFullName();
+    public function getFullPathAttribute() {
+        return asset($this->path.'/'.$this->getFullNameAttribute());
     }
 
-    public function getFullName() {
+    public function getFullNameAttribute() {
         return $this->name.'.'.$this->extension;
     }
 }
