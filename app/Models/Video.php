@@ -10,8 +10,19 @@ class Video extends Model
         'event', 'original', 'converted', 'thumb'
     ];
 
-    protected static function boot()
-    {
+    protected $appends = ['files'];
+
+    public static function list($event = null) {
+        $result = Video::select(['id', 'event', 'converted', 'thumb']);
+
+        if($event) {
+            $result->where('event', $event);
+        }
+
+        return $result->paginate(20);
+    }
+
+    protected static function boot() {
         parent::boot();
 
         Video::deleted(function ($video) {
@@ -23,5 +34,16 @@ class Video extends Model
             $thumb = File::where('id', $columns['thumb'])->first();
             $thumb && $thumb->delete();
         });
+    }
+
+    public function getFilesAttribute() {
+
+        $thumb = File::where('id', $this->thumb)->firstOrFail();
+        $video = File::where('id', $this->converted)->firstOrFail();
+
+        return [
+            'thumb' => $thumb->toArray(),
+            'video' => $video->toArray(),
+        ];
     }
 }
