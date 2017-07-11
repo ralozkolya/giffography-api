@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class Video extends Model
 {
@@ -38,12 +39,16 @@ class Video extends Model
 
     public function getFilesAttribute() {
 
-        $thumb = File::where('id', $this->thumb)->firstOrFail();
-        $video = File::where('id', $this->converted)->firstOrFail();
+        try {
+            $thumb = File::where('id', $this->thumb)->firstOrFail()->toArray();
+            $video = File::where('id', $this->converted)->firstOrFail()->toArray();
+        } catch (ModelNotFoundException $e) {
+            $thumb = $video = null;
+        }
 
         return [
-            'thumb' => $thumb->toArray(),
-            'video' => $video->toArray(),
+            'thumb' => $thumb,
+            'video' => $video,
         ];
     }
 }
