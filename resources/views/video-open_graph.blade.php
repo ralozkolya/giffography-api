@@ -9,6 +9,10 @@
     <meta name="og:video:width" content="{{ $resolution[0] }}">
     <meta name="og:video:height" content="{{ $resolution[1] }}">
     <meta name="og:video:type" content="{{ $video->files['video']['mimetype'] }}">
+
+    <script>
+        location.href = 'https://giffography.ge/ka/videos/{{ $video->id }}';
+    </script>
 </head>
 <body>
 </body>
