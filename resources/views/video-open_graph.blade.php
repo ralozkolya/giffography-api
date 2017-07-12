@@ -3,6 +3,7 @@
     <title>Giffography.ge</title>
     <meta name="og:title" content="{{ $event->en_name }}">
     <meta name="og:type" content="website">
+    <meta name="og:url" content="https://api.giffography.ge/redirect/videos/{{ $video->id }}">
     <meta name="og:image" content="{{ $video->files['thumb']['full_path'] }}">
     <meta name="og:video" content="{{ $video->files['video']['full_path'] }}">
     <meta name="og:video:secure_url" content="{{ $video->files['video']['full_path'] }}">
