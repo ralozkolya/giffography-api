@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Event;
+use App\Models\File;
 use App\Models\Video;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class EventController extends Controller {
 
@@ -29,12 +31,31 @@ class EventController extends Controller {
      */
     public function store(Request $request) {
         $this->validate($request, [
-            'name' => 'required',
+            'ka_name' => 'required',
+            'en_name' => 'required',
             'parent' => 'exists:events,id',
             'date' => 'date',
+            'file' => 'file|mimetypes:image/png,image/jpeg,image/gif|mimes:png,jpg,jpeg,gif',
         ]);
 
-        $event = Event::create($request->all());
+        $event = null;
+
+        DB::transaction(function () use (&$request, &$event) {
+            $event = Event::create($request->all());
+
+            if($request->file('file')) {
+                $path = $request->file('file')->store("public/{$event->getFolder()}");
+
+                $file = new File();
+                $file->path = $path;
+                $file->save();
+
+                $event->thumb = $file->id;
+            }
+            
+            $event->save();
+        });
+
         return response($event, 201);
     }
 
@@ -77,6 +98,7 @@ class EventController extends Controller {
     }
 
     public function videos($id) {
-        return response(Video::where('event', $id)->paginate(20));
+        return response(Video::where('event', $id)
+            ->whereNotNull('converted')->orderBy('id', 'desc')->paginate(20));
     }
 }
