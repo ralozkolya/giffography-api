@@ -25,7 +25,8 @@ $factory->define(App\User::class, function (Faker\Generator $faker) {
 
 $factory->define(App\Models\Event::class, function (Faker\Generator $faker) {
     return [
-        'name' => $faker->words(2, true),
+        'en_name' => $faker->words(2, true),
+        'ka_name' => $faker->words(2, true),
         'date' => Carbon\Carbon::now()
     ];
 });
