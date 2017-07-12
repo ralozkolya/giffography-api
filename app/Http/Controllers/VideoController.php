@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\DB;
 class VideoController extends Controller {
 
     public function __construct() {
-        $this->middleware('auth:api')->except(['index', 'show', 'last']);
+        $this->middleware('auth:api')->except(['index', 'show', 'last', 'open_graph']);
     }
 
     /**
@@ -102,7 +102,20 @@ class VideoController extends Controller {
     }
 
     public function last() {
-        $videos = Video::orderBy('id', 'desc')->limit(5)->get();
+        $videos = Video::orderBy('id', 'desc')->limit(4)->get();
         return response($videos);
+    }
+
+    public function open_graph(Video $video) {
+
+        $event = Event::where('id', $video->event)->firstOrFail();
+
+        $resolution = explode('x', $video->files['video']['resolution']);
+
+        return view('video-open_graph', [
+            'video' => $video,
+            'event' => $event,
+            'resolution' => $resolution,
+        ]);
     }
 }
