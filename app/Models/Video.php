@@ -23,6 +23,8 @@ class Video extends Model
             $result->where('event', $event);
         }
 
+        $result->whereNotNull('converted');
+
         return $result->paginate(20);
     }
 
