@@ -23,7 +23,6 @@ class VideoController extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function index(Request $request) {
-
         return response(Video::list($request->event));
     }
 
@@ -47,7 +46,7 @@ class VideoController extends Controller {
             $event = Event::first();
         }
 
-        $path = $request->file('file')->store("public/video/{$event->getFolder()}");
+        $path = $request->file('file')->store("public/{$event->getFolder()}");
         $video = null;
 
         DB::transaction(function () use ($path, &$event, &$request, &$video) {
@@ -102,14 +101,13 @@ class VideoController extends Controller {
     }
 
     public function last() {
-        $videos = Video::orderBy('id', 'desc')->limit(4)->get();
+        $videos = Video::orderBy('id', 'desc')->whereNotNull('converted')->limit(4)->get();
         return response($videos);
     }
 
     public function open_graph(Video $video) {
 
         $event = Event::where('id', $video->event)->firstOrFail();
-
         $resolution = explode('x', $video->files['video']['resolution']);
 
         return view('video-open_graph', [
