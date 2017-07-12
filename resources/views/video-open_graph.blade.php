@@ -1,6 +1,7 @@
 <html>
 <head>
     <title>Giffography.ge</title>
+    <meta name="fb:app_id" content="1382369148525539">
     <meta name="og:title" content="{{ $event->en_name }}">
     <meta name="og:type" content="website">
     <meta name="og:url" content="https://api.giffography.ge/redirect/videos/{{ $video->id }}">
