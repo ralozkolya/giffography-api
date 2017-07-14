@@ -17,7 +17,7 @@ class Video extends Model
     protected $appends = ['files'];
 
     public static function list($event = null) {
-        $result = Video::select(['id', 'event', 'converted', 'thumb']);
+        $result = Video::select(['id', 'event', 'converted', 'thumb', 'gif']);
 
         if($event) {
             $result->where('event', $event);
@@ -47,13 +47,15 @@ class Video extends Model
         try {
             $thumb = File::where('id', $this->thumb)->firstOrFail()->toArray();
             $video = File::where('id', $this->converted)->firstOrFail()->toArray();
+            $gif = File::where('id', $this->gif)->firstOrFail()->toArray();
         } catch (ModelNotFoundException $e) {
-            $thumb = $video = null;
+            $thumb = $video = $gif = null;
         }
 
         return [
             'thumb' => $thumb,
             'video' => $video,
+            'gif' => $gif,
         ];
     }
 }

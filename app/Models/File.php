@@ -61,4 +61,8 @@ class File extends Model {
     public function getFullNameAttribute() {
         return $this->name.'.'.$this->extension;
     }
+
+    public function getDimensionsArrayAttribute() {
+        return explode('x', $this->resolution);
+    }
 }
