@@ -13,7 +13,7 @@ class VideoTest extends TestCase {
      * Retrieve list of videos
      * */
     public function testGetList() {
-        $this->json('GET', '/videos')
+        $this->json('GET', '/api/videos')
             ->assertJson([
                 'current_page' => 1,
                 'data' => []
