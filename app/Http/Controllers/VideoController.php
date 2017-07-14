@@ -108,12 +108,14 @@ class VideoController extends Controller {
     public function open_graph(Video $video) {
 
         $event = Event::where('id', $video->event)->firstOrFail();
-        $resolution = explode('x', $video->files['video']['resolution']);
+        $vRes = explode('x', $video->files['video']['resolution']);
+        $tRes = explode('x', $video->files['thumb']['resolution']);
 
         return view('video-open_graph', [
             'video' => $video,
             'event' => $event,
-            'resolution' => $resolution,
+            'vRes' => $vRes,
+            'tRes' => $tRes,
         ]);
     }
 }
