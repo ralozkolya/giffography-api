@@ -25,7 +25,7 @@ class Video extends Model
 
         $result->whereNotNull('converted');
 
-        return $result->paginate(20);
+        return $result->paginate(40);
     }
 
     protected static function boot() {
