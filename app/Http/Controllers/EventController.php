@@ -20,7 +20,7 @@ class EventController extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function index() {
-        return response(Event::paginate(12));
+        return response(Event::paginate(40));
     }
 
     /**
@@ -99,6 +99,6 @@ class EventController extends Controller {
 
     public function videos($id) {
         return response(Video::where('event', $id)
-            ->whereNotNull('converted')->orderBy('id', 'desc')->paginate(20));
+            ->whereNotNull('converted')->orderBy('id', 'desc')->paginate(40));
     }
 }
