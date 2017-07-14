@@ -5,6 +5,7 @@ namespace App\Jobs;
 use App\Models\Event;
 use App\Models\File;
 use App\Models\Video;
+use FFMpeg\Coordinate\Dimension;
 use FFMpeg\Coordinate\FrameRate;
 use FFMpeg\Coordinate\TimeCode;
 use FFMpeg\FFMpeg;
@@ -16,7 +17,6 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
-use Mockery\Exception;
 
 class ConvertVideo implements ShouldQueue
 {
@@ -63,7 +63,7 @@ class ConvertVideo implements ShouldQueue
         $thumbName = "thumb_{$this->file->name}.jpg";
         $frame->save(storage_path("app/{$folder}/$thumbName"));
 
-        DB::transaction(function () use ($folder, $thumbName, &$video){
+        DB::transaction(function () use ($folder, $thumbName, &$video, &$ffmpeg){
             $thumb = new File();
             $thumb->path = "{$folder}/$thumbName";
             $thumb->save();
@@ -83,20 +83,36 @@ class ConvertVideo implements ShouldQueue
 
             $formatParams[] = '-an';
 
-            $format = new X264();
-            $format->setAdditionalParameters($formatParams);
-            $format->on('progress', function ($video, $format, $percentage) {
+            $mp4Format = new X264();
+            $mp4Format->setAdditionalParameters($formatParams);
+            $mp4Format->on('progress', function ($video, $format, $percentage) {
                 $this->file->progress = $percentage;
                 $this->file->save();
             });
 
-            $video->save($format, storage_path("app/{$folder}/conv_{$this->file->full_name}"));
+            $convertedPath = storage_path("app/{$folder}/conv_{$this->file->full_name}");
+            $gifPath = storage_path("app/{$folder}/gif_{$this->file->name}.gif");
+
+            $video->save($mp4Format, $convertedPath);
 
             $converted = new File();
             $converted->path = "{$folder}/conv_{$this->file->full_name}";
             $converted->save();
 
-            Video::where('original', $this->file->id)->update(['converted' => $converted->id]);
+            $dimensions = $converted->dimensions_array;
+
+            $ffmpeg->open($convertedPath)
+                ->gif(TimeCode::fromSeconds(0), new Dimension($dimensions[0], $dimensions[1]))
+                ->save($gifPath);
+
+            $gif = new File();
+            $gif->path = "{$folder}/gif_{$this->file->name}.gif";
+            $gif->save();
+
+            Video::where('original', $this->file->id)->update([
+                'converted' => $converted->id,
+                'gif' => $gif->id,
+            ]);
 
             $this->file->progress = 100;
             $this->file->save();
