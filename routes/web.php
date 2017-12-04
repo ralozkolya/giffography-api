@@ -13,6 +13,8 @@
 
 Auth::routes();
 
+Route::get('/', 'PageController@home');
+
 Route::get('/redirect/videos/{video}', 'VideoController@open_graph');
 
-//Route::get('/home', 'HomeController@index')->name('home');
+// Route::get('/home', 'HomeController@index')->name('home');
