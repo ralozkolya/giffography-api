@@ -14,9 +14,9 @@
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 </head>
 <body>
-    <div id="app">
+    <div class="navbar-background">
         <nav class="navbar navbar-default navbar-static-top">
-            <div class="container">
+            <div class="container-fluid">
                 <div class="navbar-header">
 
                     <!-- Collapsed Hamburger -->
@@ -29,22 +29,29 @@
 
                     <!-- Branding Image -->
                     <a class="navbar-left navbar-logo" href="{{ url('/') }}">
-                        @include('elements.logo-svg')
+                        <img src="/img/logo-header.png" alt="Logo">
                     </a>
                 </div>
 
                 <div class="collapse navbar-collapse" id="app-navbar-collapse">
                     <!-- Right Side Of Navbar -->
                     <ul class="nav navbar-nav navbar-right">
-                        @foreach($navigation as $n)
-                            <li><a href="{{ $n->path }}">{{ $n->name }}</a></li>
-                        @endforeach
+                        <li><a class="nav-link" href="/">{{ __('navigation.home') }}</a></li>
+                        <li><a class="nav-link" href="/events">{{ __('navigation.events') }}</a></li>
+                        <li><a class="nav-link" href="/news">{{ __('navigation.news') }}</a></li>
+                        <li><a class="nav-link" href="/prices">{{ __('navigation.prices') }}</a></li>
+                        <li><a class="nav-link" href="/contact">{{ __('navigation.contact') }}</a></li>
                     </ul>
                 </div>
             </div>
         </nav>
-
-        @yield('content')
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12">
+                @yield('content')
+            </div>
+        </div>
     </div>
 
     <!-- Scripts -->

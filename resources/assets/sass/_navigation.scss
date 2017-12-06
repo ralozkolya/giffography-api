@@ -1,7 +1,32 @@
-.navbar {
-  color: white;
+.navbar-background {
+  color: #151a2d;
+}
+
+.navbar-default {
+  border-color: #505464 !important;
+
+  @media (min-width: $sm) {
+    margin: 0 20px;
+  }
 }
 
 .navbar-logo {
-  padding: 10px 0;
+  position: relative;
+  top: 3px;
+
+  > img {
+    padding: 15px;
+  }
+}
+
+.navbar-default .navbar-nav > li > .nav-link {
+  color: white !important;
+  padding: 20px;
+  text-transform: uppercase;
+  opacity: .8;
+  transition: opacity .2s;
+
+  &:hover, &:active, &.active {
+    opacity: 1;
+  }
 }
