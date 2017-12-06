@@ -25,6 +25,7 @@
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
+                        <span class="fa fa-times"></span>
                     </button>
 
                     <!-- Branding Image -->
