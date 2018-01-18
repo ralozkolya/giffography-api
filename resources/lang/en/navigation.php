@@ -7,5 +7,5 @@ return [
     'news' => 'News',
     'prices' => 'Prices',
     'contact' => 'Contact',
-
+    'follow-us' => 'Follow us'
 ];
