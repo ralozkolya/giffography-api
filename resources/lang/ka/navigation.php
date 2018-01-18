@@ -7,5 +7,5 @@ return [
     'news' => 'სიახლეები',
     'prices' => 'ფასები',
     'contact' => 'კონტაქტი',
-
+    'follow-us' => 'Follow us'
 ];
