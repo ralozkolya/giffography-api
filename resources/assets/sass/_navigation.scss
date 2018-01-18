@@ -1,0 +1,99 @@
+@import "variables";
+
+.navbar-background {
+  color: #151a2d;
+}
+
+.navbar-default {
+  border-color: $navigation-light-border !important;
+
+  @media (min-width: $sm) {
+    margin: 0 20px;
+  }
+}
+
+.navbar-logo {
+  position: relative;
+  top: 3px;
+
+  > img {
+    padding: 16px;
+  }
+}
+
+.navbar-toggle {
+  position: relative;
+  top: 10px;
+  border: none !important;
+  background: none !important;
+
+  > .fa {
+    position: relative;
+    top: -10px;
+    display: none;
+    color: white;
+    font-size: 30px;
+  }
+
+  > .icon-bar {
+    background-color: white !important;
+  }
+
+  &:not(.collapsed) {
+    > .icon-bar {
+      display: none;
+    }
+
+    > .fa-times {
+      display: inline;
+    }
+  }
+}
+
+.navbar-default .navbar-nav > li > .nav-link {
+  color: white !important;
+  padding: 25px;
+  text-transform: uppercase;
+  opacity: .8;
+  transition: opacity .2s;
+
+  &:hover, &:active, &.active {
+    opacity: 1;
+  }
+}
+
+.social-sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 40px;
+  border-right: solid 1px $navigation-light-border;
+
+  > .rotated {
+    position: absolute;
+    transform: rotate(-90deg);
+    transform-origin: left top 0;
+    top: 50%;
+    left: 27px;
+    white-space: nowrap;
+    padding: 0 20px;
+    background: $body-bg;
+    color: #57607c;
+    text-transform: uppercase;
+    font-size: 16px;
+
+    a {
+      color: inherit;
+
+    }
+
+    > span, a {
+      padding: 0 12px;
+    }
+
+    > .fa {
+      transform: rotate(90deg);
+    }
+  }
+}

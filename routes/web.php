@@ -13,6 +13,12 @@
 
 Auth::routes();
 
-Route::get('/redirect/videos/{video}', 'VideoController@open_graph');
+Route::prefix('{lang?}')->middleware('locale')->group(function() {
+    Route::get('/', 'PageController@home');
+    Route::get('/events', 'PageController@events');
+    Route::get('/news', 'PageController@news');
+    Route::get('/prices', 'PageController@prices');
+    Route::get('/contact', 'PageController@contact');
+});
 
-//Route::get('/home', 'HomeController@index')->name('home');
+Route::get('/redirect/videos/{video}', 'VideoController@open_graph');
