@@ -14,9 +14,9 @@
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 </head>
 <body>
-    <div id="app">
+    <div class="navbar-background">
         <nav class="navbar navbar-default navbar-static-top">
-            <div class="container">
+            <div class="container-fluid">
                 <div class="navbar-header">
 
                     <!-- Collapsed Hamburger -->
@@ -25,53 +25,34 @@
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
+                        <span class="fa fa-times"></span>
                     </button>
 
                     <!-- Branding Image -->
-                    <a class="navbar-brand" href="{{ url('/') }}">
-                        {{ config('app.name', 'Laravel') }}
+                    <a class="navbar-left navbar-logo" href="{{ url('/') }}">
+                        <img src="/img/logo-header.png" alt="Logo">
                     </a>
                 </div>
 
                 <div class="collapse navbar-collapse" id="app-navbar-collapse">
-                    <!-- Left Side Of Navbar -->
-                    <ul class="nav navbar-nav">
-                        &nbsp;
-                    </ul>
-
                     <!-- Right Side Of Navbar -->
                     <ul class="nav navbar-nav navbar-right">
-                        <!-- Authentication Links -->
-                        @if (Auth::guest())
-                            <li><a href="{{ route('login') }}">Login</a></li>
-                            <li><a href="{{ route('register') }}">Register</a></li>
-                        @else
-                            <li class="dropdown">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                                    {{ Auth::user()->name }} <span class="caret"></span>
-                                </a>
-
-                                <ul class="dropdown-menu" role="menu">
-                                    <li>
-                                        <a href="{{ route('logout') }}"
-                                            onclick="event.preventDefault();
-                                                     document.getElementById('logout-form').submit();">
-                                            Logout
-                                        </a>
-
-                                        <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                                            {{ csrf_field() }}
-                                        </form>
-                                    </li>
-                                </ul>
-                            </li>
-                        @endif
+                        <li><a class="nav-link" href="/">{{ __('navigation.home') }}</a></li>
+                        <li><a class="nav-link" href="/{{ $locale }}/events">{{ __('navigation.events') }}</a></li>
+                        <li><a class="nav-link" href="/{{ $locale }}/news">{{ __('navigation.news') }}</a></li>
+                        <li><a class="nav-link" href="/{{ $locale }}/prices">{{ __('navigation.prices') }}</a></li>
+                        <li><a class="nav-link" href="/{{ $locale }}/contact">{{ __('navigation.contact') }}</a></li>
                     </ul>
                 </div>
             </div>
         </nav>
-
-        @yield('content')
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12">
+                @yield('content')
+            </div>
+        </div>
     </div>
 
     <!-- Scripts -->
