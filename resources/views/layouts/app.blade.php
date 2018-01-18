@@ -38,10 +38,10 @@
                     <!-- Right Side Of Navbar -->
                     <ul class="nav navbar-nav navbar-right">
                         <li><a class="nav-link" href="/">{{ __('navigation.home') }}</a></li>
-                        <li><a class="nav-link" href="/events">{{ __('navigation.events') }}</a></li>
-                        <li><a class="nav-link" href="/news">{{ __('navigation.news') }}</a></li>
-                        <li><a class="nav-link" href="/prices">{{ __('navigation.prices') }}</a></li>
-                        <li><a class="nav-link" href="/contact">{{ __('navigation.contact') }}</a></li>
+                        <li><a class="nav-link" href="/{{ $locale }}/events">{{ __('navigation.events') }}</a></li>
+                        <li><a class="nav-link" href="/{{ $locale }}/news">{{ __('navigation.news') }}</a></li>
+                        <li><a class="nav-link" href="/{{ $locale }}/prices">{{ __('navigation.prices') }}</a></li>
+                        <li><a class="nav-link" href="/{{ $locale }}/contact">{{ __('navigation.contact') }}</a></li>
                     </ul>
                 </div>
             </div>
