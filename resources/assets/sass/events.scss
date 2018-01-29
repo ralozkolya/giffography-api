@@ -1,0 +1,48 @@
+@import "variables";
+
+.events-container {
+  position: relative;
+  top: 50px;
+}
+
+.decorative-frame {
+  position: absolute;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  border: solid 2px;
+
+  &.blue {
+    width: 80%;
+    height: 20px;
+    top: -20px;
+    left: 20px;
+    border-color: $events-container-border-blue;
+    border-bottom: none;
+    z-index: -10;
+  }
+
+  &.pink {
+    width: 100%;
+    height: 100%;
+    top: 20px;
+    left: -20px;
+    border-color: $events-container-border-pink;
+    z-index: -10;
+  }
+
+  &.pink-segment {
+    width: 40px;
+    top: 20px;
+    border-color: $events-container-border-pink;
+    border-left: none;
+    border-bottom: none;
+    border-right: none;
+  }
+}
+
+.events-content {
+  padding: 20px;
+  background: $events-container-bg;
+}

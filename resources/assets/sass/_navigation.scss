@@ -73,9 +73,9 @@
   > .rotated {
     position: absolute;
     transform: rotate(-90deg);
-    transform-origin: left top 0;
+    transform-origin: center top 0;
     top: 50%;
-    left: 27px;
+    left: -90px;
     white-space: nowrap;
     padding: 0 20px;
     background: $body-bg;
