@@ -25,7 +25,9 @@
             @include('elements/navigation')
             @yield('content')
         </div>
-        <div class="promo-sidebar">Promos n shit</div>
+        <div class="promo-sidebar">
+            @include('elements/promos')
+        </div>
     </div>
 
     <!-- Scripts -->

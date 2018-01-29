@@ -1,6 +1,12 @@
 @import "variables";
 
 body {
+  background: url("../images/bg.png");
+  background-position: bottom;
+  background-repeat: no-repeat;
+  background-size: 100% auto;
+  background-attachment: fixed;
+  min-height: 100vh;
 }
 
 .wrapper {
