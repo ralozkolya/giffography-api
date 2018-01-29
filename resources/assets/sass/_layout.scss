@@ -1,0 +1,37 @@
+@import "variables";
+
+body {
+}
+
+.wrapper {
+  display: flex;
+  flex-wrap: wrap;
+
+  > .main-content, .promo-sidebar {
+    flex-basis: 100%;
+  }
+
+  @media (min-width: $md) {
+    margin: 0 40px;
+    min-height: 100vh;
+
+    > .main-content, .promo-sidebar {
+      border: solid 1px $navigation-light-border;
+      border-top: none;
+      border-bottom: none;
+    }
+  }
+
+  @media (min-width: $lg) {
+
+    > .main-content {
+      flex-basis: auto;
+      flex-grow: 1;
+    }
+
+    > .promo-sidebar {
+      flex-basis: 300px;
+      border: none;
+    }
+  }
+}

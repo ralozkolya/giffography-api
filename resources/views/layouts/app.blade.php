@@ -17,13 +17,16 @@
 </head>
 <body>
 
-    @include('elements/navigation')
-
-    <div>
-        @yield('content')
+    <div class="wrapper">
+        <div>
+            @include('elements/social-sidebar')
+        </div>
+        <div class="main-content">
+            @include('elements/navigation')
+            @yield('content')
+        </div>
+        <div class="promo-sidebar">Promos n shit</div>
     </div>
-
-    @include('elements/social-sidebar')
 
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}"></script>
