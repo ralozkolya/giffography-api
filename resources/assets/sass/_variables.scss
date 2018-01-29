@@ -1,6 +1,10 @@
+// Colors
+$blue: #3dc1d4;
+$pink: #ed475a;
 
-// Body
+// Backgrounds
 $body-bg: #12172a;
+$events-container-bg: #1b2136;
 
 // Borders
 $laravel-border-color: darken($body-bg, 10%);
@@ -9,6 +13,8 @@ $navbar-default-border: $laravel-border-color;
 $panel-default-border: $laravel-border-color;
 $panel-inner-border: $laravel-border-color;
 $navigation-light-border: #505464;
+$events-container-border-blue: $blue;
+$events-container-border-pink: $pink;
 
 // Brands
 $brand-primary: #3097D1;
