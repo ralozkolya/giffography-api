@@ -12,18 +12,24 @@
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    <link rel="icon" href="{{ asset('images/favicon.png') }}">
 
     @yield('head')
 </head>
 <body>
 
-    @include('elements/navigation')
-
-    <div>
-        @yield('content')
+    <div class="wrapper">
+        <div>
+            @include('elements/social-sidebar')
+        </div>
+        <div class="main-content">
+            @include('elements/navigation')
+            @yield('content')
+        </div>
+        <div class="promo-sidebar">
+            @include('elements/promos')
+        </div>
     </div>
-
-    @include('elements/social-sidebar')
 
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}"></script>
