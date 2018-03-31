@@ -19,11 +19,24 @@
         <div class="collapse navbar-collapse" id="app-navbar-collapse">
             <!-- Right Side Of Navbar -->
             <ul class="nav navbar-nav navbar-right">
-                <li><a class="nav-link" href="/">{{ __('navigation.home') }}</a></li>
-                <li><a class="nav-link" href="/{{ $locale }}/events">{{ __('navigation.events') }}</a></li>
-                <li><a class="nav-link" href="/{{ $locale }}/news">{{ __('navigation.news') }}</a></li>
-                <li><a class="nav-link" href="/{{ $locale }}/prices">{{ __('navigation.prices') }}</a></li>
-                <li><a class="nav-link" href="/{{ $locale }}/contact">{{ __('navigation.contact') }}</a></li>
+                <?php
+                    $links = [
+                        [ 'href' => "/", 'pattern' => '/', 'label' => __('navigation.home') ],
+                        [ 'href' => "/$locale/events", 'pattern' => '*/events', 'label' => __('navigation.events') ],
+                        [ 'href' => "/$locale/news", 'pattern' => '*/news', 'label' => __('navigation.news') ],
+                        [ 'href' => "/$locale/prices", 'pattern' => '*/prices', 'label' => __('navigation.prices') ],
+                        [ 'href' => "/$locale/contact", 'pattern' => '*/contact', 'label' => __('navigation.contact') ],
+                    ];
+                ?>
+                @foreach($links as $link)
+                    <li>
+                    @if(Request::is($link['pattern']))
+                        <a class="nav-link active" href="{{ $link['href']  }}">{{ $link['label'] }}</a>
+                    @else
+                        <a class="nav-link" href="{{ $link['href']  }}">{{ $link['label'] }}</a>
+                    @endif
+                    </li>
+                @endforeach
             </ul>
         </div>
     </div>
