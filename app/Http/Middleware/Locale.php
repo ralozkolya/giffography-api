@@ -3,6 +3,8 @@
 namespace App\Http\Middleware;
 
 use Closure;
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Session;
 
 class Locale
 {
@@ -15,7 +17,21 @@ class Locale
      */
     public function handle($request, Closure $next)
     {
-        $lang = $request->segment(1);
+        $locale = $this->getLocale($request->segment(1));
+        App::setLocale($this->getLocale($locale));
+        Session::put('locale', $locale);
         return $next($request);
+    }
+
+    private function getLocale($locale) {
+        if (in_array($locale, ['ka', 'en'], true)) {
+            return $locale;
+        }
+
+        if (Session::has('locale')) {
+            return Session::get('locale');
+        }
+
+        return config('app.fallback_locale');
     }
 }

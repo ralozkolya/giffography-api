@@ -1,3 +1,4 @@
+<?php $locale = config('app.locale') ?>
 <nav class="navbar navbar-default navbar-static-top">
     <div class="container-fluid">
         <div class="navbar-header">
